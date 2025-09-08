@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ExamController; // <-- IMPORT THE NEW CONTROLLER
+use App\Http\Controllers\ExamController; 
+use App\Http\Controllers\ExamSubmissionController;
 
 // This group protects all routes inside it. A user must be authenticated
 // via Sanctum to access them.
@@ -13,12 +14,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         return $request->user();
     });
 
-    // 👇 OUR NEW ROUTE 👇
-    // When a POST request is made to '/exams', call the 'store' method
-    // on the ExamController.
     Route::post('/exams', [ExamController::class, 'store']);
+    Route::get('/exams', [ExamController::class, 'index']);
 
-    // We can add more exam-related routes here later (GET, UPDATE, DELETE)
+    Route::post('/exam-submissions', [ExamSubmissionController::class, 'store']);
 
 });
 

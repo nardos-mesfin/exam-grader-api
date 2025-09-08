@@ -9,6 +9,13 @@ use Illuminate\Http\JsonResponse;
 
 class ExamController extends Controller
 {
+
+    public function index(Request $request): JsonResponse
+    {
+        $exams = $request->user()->exams()->latest()->get();
+        return response()->json($exams);
+    }
+    
     /**
      * Store a newly created exam and its questions in the database.
      */
