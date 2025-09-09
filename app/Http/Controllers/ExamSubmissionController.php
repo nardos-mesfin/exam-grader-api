@@ -42,24 +42,25 @@ class ExamSubmissionController extends Controller
         // 6. ✨ THE NEW, POWERFUL GRADING PROMPT ✨
         $prompt = <<<PROMPT
         You are an AI Exam Grading Assistant. Your task is to analyze an image of a student's handwritten answers and compare it against the provided answer key.
-
+    
         **ANSWER KEY:**
         {$answerKeyString}
-
+    
         **INSTRUCTIONS:**
-        1.  Read the student's handwritten answers from the provided image.
-        2.  For each question, compare the student's answer to the corresponding answer in the key. Be lenient with minor spelling mistakes (e.g., "Pairs" vs "Paris").
-        3.  Determine the score for each question based on the marks provided in the answer key. A correct answer gets full marks, an incorrect answer gets 0.
-        4.  You MUST respond with ONLY a valid JSON object. Do not include any other text, explanations, or markdown formatting like ```json.
-        5.  The JSON object must have a key named "grades" which is an array of objects.
-        6.  Each object in the "grades" array must have three keys: "question_number" (integer corresponding to the position in the answer key), "student_answer" (string of what you read), and "score" (integer).
-
+        1.  First, locate and extract the student's full name from the top of the exam paper.
+        2.  Read the student's handwritten answers for each question.
+        3.  For each question, compare the student's answer to the corresponding answer in the key. Be lenient with minor spelling mistakes.
+        4.  Determine the score for each question based on the marks provided in the answer key.
+        5.  You MUST respond with ONLY a valid JSON object. Do not include any other text, explanations, or markdown formatting like ```json.
+        6.  The JSON object must have a key named "student_name" (string) and a key named "grades" (an array of objects).
+        7.  Each object in the "grades" array must have three keys: "question_number", "student_answer", and "score".
+    
         Example of your required JSON output:
         {
+          "student_name": "Jhon Doe",
           "grades": [
             { "question_number": 1, "student_answer": "Paris", "score": 1 },
-            { "question_number": 2, "student_answer": "True", "score": 1 },
-            { "question_number": 3, "student_answer": "Mitochondria", "score": 0 }
+            { "question_number": 2, "student_answer": "True", "score": 1 }
           ]
         }
         PROMPT;
@@ -113,7 +114,8 @@ class ExamSubmissionController extends Controller
             }
 
             return response()->json([
-                'ai_grades' => $gradedData,
+                'ai_results' => $gradedData,
+                'answer_key' => $exam->questions,
             ]);
 
         } catch (\Exception $e) {
