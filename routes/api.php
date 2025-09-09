@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExamController; 
 use App\Http\Controllers\ExamSubmissionController;
+use App\Http\Controllers\ExamResultController; 
 
 // This group protects all routes inside it. A user must be authenticated
 // via Sanctum to access them.
@@ -18,6 +19,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/exams', [ExamController::class, 'index']);
 
     Route::post('/exam-submissions', [ExamSubmissionController::class, 'store']);
+    Route::post('/exam-results', [ExamResultController::class, 'store']);
 
 });
 
